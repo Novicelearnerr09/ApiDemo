@@ -3,8 +3,10 @@ package com.example.demospring.Implementation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demospring.Dao.CourseDao;
 import com.example.demospring.Entities.Course;
 import com.example.demospring.Service.CourseService;
 import java.util.stream.Collectors;
@@ -14,77 +16,39 @@ public class CourseServiceImpl implements CourseService {
 
     List<Course> list;
 
-    public CourseServiceImpl()
-    {
-        list = new ArrayList<>();
-        list.add(new Course(1,"java", "java edition"));
-        list.add(new Course(2, "Spring", "Spring edition"));
-    }
+    @Autowired
+    CourseDao courseDao;
 
     @Override
     public List<Course> getCourses() {
-        // TODO Auto-generated method stub
-       // throw new UnsupportedOperationException("Unimplemented method 'getCourse'");
-       System.out.println("implementation");
-       return list;
+        return courseDao.findAll();
     }
 
     @Override
     public Course getCourse(Long courseId) {
-        Course c = null;
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'getCourse'");
+        return courseDao.getById(courseId);
 
-        for(Course course : list)
-        {
-            if(course.getId() == courseId)
-            {
-                c=course;
-                break;
-            }
-        
-        }
-
-       // System.out.println("impl - services 1");
-        return c;
     }
-
 
     @Override
     public Course addCourse(Course course) {
-        list.add(course);
-        return course;
+     return courseDao.save(course);
     }
 
     @Override
     public Course updateCourse(Course course) {
-
-        list.forEach(e -> {
-            if(e.getId()==course.getId())
-            {
-                e.setId(course.getId());
-                e.setName(course.getName());
-                e.setTitle(course.getTitle());
-            }
-        });
-        
-        return course;
+       // courseDao.getById(course.);
+        return courseDao.save(course);
     }
 
     @Override
     public void deleteCourse(Long courseId) {
-        
-        list=this.list.stream().filter(e->e.getId()!=courseId).collect(Collectors.toList());
-         
-       }
+      
+        Course c = courseDao.getById(courseId);
+      courseDao.delete(c);
+    }
 
-
-
-
-   
-
-
-
+    
 
     
 
